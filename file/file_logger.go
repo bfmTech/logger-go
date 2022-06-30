@@ -40,7 +40,7 @@ func (l *FileLogger) Initialize() error {
 	l.bufferLength = 0
 	l.bufferChan = make(chan string, 10000)
 	l.t = time.NewTicker(time.Millisecond * 1000)
-	l.filePath = fmt.Sprintf("/Users/sook/winner/k8sLogs/%s/%s/", l.AppName, hostName)
+	l.filePath = fmt.Sprintf("/var/winnerlogs/%s/%s/", l.AppName, hostName)
 	l.fileName = "system.log"
 
 	err = os.MkdirAll(l.filePath, os.ModePerm)
