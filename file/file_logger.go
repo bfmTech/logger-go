@@ -19,13 +19,17 @@ type FileLogger struct {
 	bufferChan      chan string
 	t               *time.Ticker
 	filePath        string // 文件保存路径
-	fileName        string // 文件名
 }
 
 func (l *FileLogger) Initialize() error {
 	hostName, err := os.Hostname()
 	if err != nil {
 		return err
+	}
+
+	filePath := os.Getenv("LOGGER_FILE_PATH")
+	if filePath == "" {
+		filePath = "/var/winnerlogs"
 	}
 
 	/*
@@ -40,8 +44,7 @@ func (l *FileLogger) Initialize() error {
 	l.bufferLength = 0
 	l.bufferChan = make(chan string, 10000)
 	l.t = time.NewTicker(time.Millisecond * 1000)
-	l.filePath = fmt.Sprintf("/var/winnerlogs/%s/%s/", l.AppName, hostName)
-	l.fileName = "system.log"
+	l.filePath = fmt.Sprintf("%s/%s/%s/", filePath, l.AppName, hostName)
 
 	err = os.MkdirAll(l.filePath, os.ModePerm)
 	if err != nil {
