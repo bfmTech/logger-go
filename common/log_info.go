@@ -2,6 +2,8 @@ package common
 
 import (
 	"fmt"
+	"reflect"
+	"strings"
 )
 
 type applicationLog struct {
@@ -17,17 +19,28 @@ func (l *applicationLog) format() string {
 }
 
 type AccessLog struct {
-	Method        string
-	Status        int32
-	TimeLocal     string
-	RequestTime   float64
-	RequestUri    string
-	Referer       string
-	RemoteAddr    string
-	BodyBytesSent int64
-	UserAgent     string
+	Method    string
+	Status    int32
+	BeginTime int64
+	EndTime   int64
+	Referer   string
+	HttpHost  string
+	Interface string
+	ReqQuery  string
+	ReqBody   string
+	ResBody   string
+	ClientIp  string
+	UserAgent string
+	Headers   string
 }
 
 func (l *AccessLog) Format() string {
-	return fmt.Sprintf("%s%s%v%s%v%s%s%s%s%s%s%s%v%s%s", l.Method, Separator, l.Status, Separator, l.RequestTime, Separator, l.RequestUri, Separator, l.Referer, Separator, l.RemoteAddr, Separator, l.BodyBytesSent, Separator, l.UserAgent)
+	var logStrArr []string
+	v := reflect.ValueOf(*l)
+	fmt.Println(v.NumField())
+	for i := 0; i < v.NumField(); i++ {
+		logStrArr = append(logStrArr, fmt.Sprintf("%v", v.Field(i)))
+	}
+
+	return strings.Join(logStrArr, Separator)
 }
