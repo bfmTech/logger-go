@@ -37,7 +37,6 @@ type AccessLog struct {
 func (l *AccessLog) Format() string {
 	var logStrArr []string
 	v := reflect.ValueOf(*l)
-	fmt.Println(v.NumField())
 	for i := 0; i < v.NumField(); i++ {
 		logStrArr = append(logStrArr, fmt.Sprintf("%v", v.Field(i)))
 	}
