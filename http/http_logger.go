@@ -27,15 +27,15 @@ func (l *HttpLogger) Initialize() error {
 	// 加载阿里云日志服务器相关配置的环境变量
 	endpoint := os.Getenv("LOGGER_ALIYUN_ENDPOINT")
 	if endpoint == "" {
-		return errors.New("invalid env LOGGER_ALIYUN_ENDPOINT")
+		endpoint = "cn-hangzhou.log.aliyuncs.com"
 	}
 	projectName := os.Getenv("LOGGER_ALIYUN_PROJECTNAME")
 	if projectName == "" {
-		return errors.New("invalid env LOGGER_ALIYUN_PROJECTNAME")
+		projectName = "k8s-log-custom-zwdfroh2"
 	}
 	logStoreName := os.Getenv("LOGGER_ALIYUN_LOGSTORENAME")
 	if logStoreName == "" {
-		return errors.New("invalid env LOGGER_ALIYUN_LOGSTORENAME")
+		logStoreName = "config-operation-log"
 	}
 	accessKeyId := os.Getenv("LOGGER_ALIYUN_ACCESSKEYID")
 	if accessKeyId == "" {
@@ -51,12 +51,6 @@ func (l *HttpLogger) Initialize() error {
 	l.logStoreName = logStoreName
 	l.accessKeyId = accessKeyId
 	l.accessKeySecret = accessKeySecret
-
-	// l.endpoint = ""
-	// l.projectName = ""
-	// l.logStoreName = ""
-	// l.accessKeyId = ""
-	// l.accessKeySecret = ""
 
 	// 启动producer实例
 	producerConfig := producer.GetDefaultProducerConfig()
