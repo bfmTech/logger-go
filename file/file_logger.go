@@ -12,10 +12,10 @@ import (
 
 type FileLogger struct {
 	AppName         string
-	maxBufferLength int64            // 最大缓存字符串长度
-	maxBufferSize   int64            // 最大缓存日志条数
+	maxBufferLength int64            // 最大缓存日志条数
+	maxBufferSize   int64            // 最大缓存字符串大小
 	bufferLog       []unsafe.Pointer // 缓存日志
-	bufferLength    int64            // 缓存日志长度
+	bufferSize      int64            // 缓存日志字符串大小
 	bufferChan      chan string
 	t               *time.Ticker
 	filePath        string // 文件保存路径
@@ -35,10 +35,10 @@ func (l *FileLogger) Initialize() error {
 	 * 文件字符长度大于等于1 * 1024 * 1024
 	 * 日志条数大于等于100
 	 */
-	l.maxBufferLength = 1 * 1024 * 1024
-	l.maxBufferSize = 100
+	l.maxBufferSize = 1 * 1024 * 1024
+	l.maxBufferLength = 100
 	l.bufferLog = make([]unsafe.Pointer, 0, 200)
-	l.bufferLength = 0
+	l.bufferSize = 0
 	l.bufferChan = make(chan string, 10000)
 	l.t = time.NewTicker(time.Millisecond * 3000)
 	l.filePath = fmt.Sprintf("%s/%s/%s/", filePath, l.AppName, hostName)
@@ -59,9 +59,9 @@ func (l *FileLogger) createInterval() {
 		case <-l.t.C:
 			l.flush()
 		case logStr := <-l.bufferChan:
-			l.bufferLength += int64(len(logStr))
+			l.bufferSize += int64(len(logStr))
 			l.bufferLog = append(l.bufferLog, unsafe.Pointer(&logStr))
-			if len(l.bufferLog) >= int(l.maxBufferSize) || l.bufferLength >= l.maxBufferLength {
+			if len(l.bufferLog) >= int(l.maxBufferLength) || l.bufferSize >= l.maxBufferSize {
 				l.flush()
 			}
 		}
@@ -72,7 +72,7 @@ func (l *FileLogger) flush() error {
 	if len(l.bufferLog) > 0 {
 		tempBufferLog := l.bufferLog
 		l.bufferLog = l.bufferLog[:0]
-		l.bufferLength = 0
+		l.bufferSize = 0
 
 		// 失败重试3次
 		retryNum := 2
