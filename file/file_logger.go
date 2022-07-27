@@ -27,23 +27,20 @@ func (l *FileLogger) Initialize() error {
 		return err
 	}
 
-	filePath := os.Getenv("LOGGER_FILE_PATH")
-	if filePath == "" {
-		filePath = "/var/winnerlogs"
-	}
+	filePath := "/var/winnerlogs"
 
 	/*
 	 * 日志写入文件条件：
-	 * 每隔1秒
-	 * 文件字符长度大于等于50000
+	 * 每隔3秒
+	 * 文件字符长度大于等于1 * 1024 * 1024
 	 * 日志条数大于等于100
 	 */
-	l.maxBufferLength = 50000
+	l.maxBufferLength = 1 * 1024 * 1024
 	l.maxBufferSize = 100
 	l.bufferLog = make([]unsafe.Pointer, 0, 200)
 	l.bufferLength = 0
 	l.bufferChan = make(chan string, 10000)
-	l.t = time.NewTicker(time.Millisecond * 1000)
+	l.t = time.NewTicker(time.Millisecond * 3000)
 	l.filePath = fmt.Sprintf("%s/%s/%s/", filePath, l.AppName, hostName)
 
 	err = os.MkdirAll(l.filePath, os.ModePerm)
@@ -102,7 +99,7 @@ func (l *FileLogger) flush() error {
 }
 
 func writeFile(filePath string, tempBufferLog *[]unsafe.Pointer) error {
-	file, err := os.OpenFile(fmt.Sprintf("%s/%s.log", filePath, time.Now().Format("2006-01-02")), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	file, err := os.OpenFile(fmt.Sprintf("%s/logger-%s.log", filePath, time.Now().Format("2006-01-02")), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		return err
 	}

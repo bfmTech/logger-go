@@ -2,6 +2,7 @@ package logger
 
 import (
 	"errors"
+	"fmt"
 	"testing"
 	"time"
 
@@ -9,7 +10,11 @@ import (
 )
 
 func TestOne(t *testing.T) {
-	log, _ := NewLogger("go_app", common.Console) // common.Console、common.File、common.Http
+	log, err := NewLogger("go_app", common.Console) // common.Console、common.File、common.Http
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	defer log.Close()
 
 	log.Info("这是info消息1", "这是info消息2")
@@ -20,8 +25,8 @@ func TestOne(t *testing.T) {
 		Status:    200,
 		BeginTime: 1657092964,
 		EndTime:   1657092964,
-		Referer:   "http://monitor.wngf.com.cn",
-		HttpHost:  "monitor.wngf.com.cn",
+		Referer:   "http://xxx.test.com.cn",
+		HttpHost:  "xx.test.com.cn",
 		Interface: "/api/v2/warning/list",
 		ReqQuery:  "page=1&limit=10",
 		ReqBody:   "",
