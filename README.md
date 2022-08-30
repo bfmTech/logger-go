@@ -20,16 +20,15 @@ logger/logger.go (根据情况替换 [应用名称logger-go-test]和选择日志
 package logger
 
 import (
-	"github.com/bfmTech/logger-go"
-	"github.com/bfmTech/logger-go/common"
+	winner_logger "github.com/bfmTech/logger-go"
 )
 
 /**
  * @description: logger初始化
  * @return {*}
  */
-func InitLogger() (logger.Logger, error) {
-	log, err := logger.NewLogger("logger-go-test", common.Console) // common.Console、common.File、common.Http
+func InitLogger() (winner_logger.Logger, error) {
+	log, err := winner_logger.NewLogger("logger-go-test", winner_logger.Console) // common.Console、common.File、common.Http
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +46,7 @@ import (
 	"errors"
 	"log"
 
-	"github.com/bfmTech/logger-go/common"
+	winner_logger "github.com/bfmTech/logger-go"
 	"logger-demo/logger"
 )
 
@@ -62,7 +61,7 @@ func main() {
 
 	logger.Info("这是info消息1", "消息2", "消息3")
 	logger.Error(errors.New("出错啦"))
-	logger.Access(&common.AccessLog{})
+	logger.Access(&winner_logger.AccessLog{})
 }
 ```
 
@@ -71,20 +70,20 @@ func main() {
 
 日志上传方式
 
-|  LogType   | 使用环境  | 说明  |
+|  上传方式   | 使用环境  | 说明  |
 |  ----  | ----  | ----  |
-| common.Console  | 容器平台(推荐) | 日志输出到控制台，Logtail采集 |
-| common.File  | 容器平台 | 日志根据日期保存到指定目录，Logtail采集 |
-| common.Http  | 任意环境(需配置阿里云相关环境变量) | http上传日志到阿里sls |
+| Console  | 容器平台(推荐) | 日志输出到控制台，Logtail采集 |
+| File  | 容器平台 | 日志根据日期保存到指定目录，Logtail采集 |
+| Http  | 任意环境(需配置阿里云相关环境变量) | http上传日志到阿里sls |
 
 
-日志类型 level 可在查询时筛选
+不同的方法的日志类型level不同 可在查询时筛选
 ```code
--level.debug    //支持多个参数，可根据每个参数检索
--level.info     //支持多个参数，可根据每个参数检索
--level.warn     //支持多个参数，可根据每个参数检索
--level.error    //只接受Error对象 （推送钉钉告警消息）
--level.access   //access日志，根据方法提示的参数传递
+-logger.Debug    //支持多个参数，可根据每个参数检索
+-logger.Info     //支持多个参数，可根据每个参数检索
+-logger.Warn     //支持多个参数，可根据每个参数检索
+-logger.Error    //只接受Error对象 （推送钉钉告警消息）
+-logger.Access   //access日志，根据方法提示的参数传递
 ```
 
 access日志 字段说明
