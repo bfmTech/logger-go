@@ -17,6 +17,12 @@ type Logger interface {
 	Close()
 }
 
+/**
+ * @description: 创建Logger对象
+ * @param {string} appName 应用名
+ * @param {common.LoggerMethod} method 日志记录方式 console、file、http
+ * @return {*}
+ */
 func NewLogger(appName string, method common.LoggerMethod) (Logger, error) {
 	var log Logger
 

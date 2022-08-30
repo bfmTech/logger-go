@@ -8,9 +8,7 @@ import (
 
 	"github.com/bfmTech/logger-go/common"
 
-	sls "github.com/aliyun/aliyun-log-go-sdk"
 	"github.com/aliyun/aliyun-log-go-sdk/producer"
-	"google.golang.org/protobuf/proto"
 )
 
 type HttpLogger struct {
@@ -95,13 +93,7 @@ func (l *HttpLogger) log(level common.Level, messages []string) {
 
 	logStr := common.GetApplicationLogStr(level, l.AppName, messages, 4)
 
-	log := &sls.Log{
-		Time: proto.Uint32(uint32(time.Now().Unix())),
-		Contents: []*sls.LogContent{{
-			Key:   proto.String("content"),
-			Value: proto.String(logStr),
-		}},
-	}
+	log := producer.GenerateLog(uint32(time.Now().Unix()), map[string]string{"content": logStr})
 
 	// 失败重试3次
 	retryNum := 2

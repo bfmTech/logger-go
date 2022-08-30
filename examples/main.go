@@ -1,26 +1,25 @@
-package logger
+package main
 
 import (
 	"errors"
-	"fmt"
-	"testing"
-	"time"
+	"log"
 
 	"github.com/bfmTech/logger-go/common"
+	"github.com/bfmTech/logger-go/examples/logger"
 )
 
-func TestOne(t *testing.T) {
-	log, err := NewLogger("go_app", common.Console) // common.Console、common.File、common.Http
+func main() {
+	logger, err := logger.InitLogger()
 	if err != nil {
-		fmt.Println(err)
-		return
+		log.Fatal("logger初始化失败：" + err.Error())
 	}
-	defer log.Close()
+	defer logger.Close()
 
-	log.Info("这是info消息1", "这是info消息2")
-	log.Debug("这是debug消息")
-	log.Error(errors.New("这是error消息"))
-	log.Access(&common.AccessLog{
+	logger.Info("这是info消息1", "消息2", "消息3")
+
+	logger.Error(errors.New("出错啦"))
+
+	logger.Access(&common.AccessLog{
 		Method:    "get",
 		Status:    200,
 		BeginTime: 1657092964,
@@ -30,12 +29,11 @@ func TestOne(t *testing.T) {
 		Interface: "/api/v2/warning/list",
 		ReqQuery:  "page=1&limit=10",
 		ReqBody:   "",
-		ResBody:   "4e8eaca4d",
+		ResBody:   "{\"code\":0,\"data\": \"\",\"msg\":\"success\"}",
 		ClientIp:  "113.132.211.1",
 		UserAgent: "Mozilla/5.0 (Linux; Android 9; COR-AL10 Build/HUAWEICOR-AL10; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/88.0.4324.93 Mobile Safari/537.36;psbc",
 		ReqId:     "j4k34423kl3k4f5lk234js9",
-		Headers:   "334kj3k4j3k4j",
+		Headers:   "token:439skf2dk234",
 	})
 
-	time.Sleep(time.Second * 3)
 }

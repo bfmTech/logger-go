@@ -31,6 +31,7 @@ type AccessLog struct {
 	ResBody   string
 	ClientIp  string
 	UserAgent string
+	ReqId     string
 	Headers   string
 }
 

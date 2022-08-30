@@ -2,10 +2,7 @@ module github.com/bfmTech/logger-go
 
 go 1.18
 
-require (
-	github.com/aliyun/aliyun-log-go-sdk v0.1.36
-	google.golang.org/protobuf v1.25.0
-)
+require github.com/aliyun/aliyun-log-go-sdk v0.1.36
 
 require (
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
@@ -19,5 +16,6 @@ require (
 	golang.org/x/lint v0.0.0-20190930215403-16217165b5de // indirect
 	golang.org/x/net v0.0.0-20201021035429-f5854403a974 // indirect
 	golang.org/x/tools v0.0.0-20210106214847-113979e3529a // indirect
+	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 )
