@@ -1,4 +1,4 @@
-package common
+package winner_logger
 
 import (
 	"fmt"
@@ -18,6 +18,10 @@ func (l *applicationLog) format() string {
 	return fmt.Sprintf("[%s] [%s] [%s] [%s] %s", l.LogTime, l.Level, l.AppName, l.Stack, l.Message)
 }
 
+/**
+ * @description: access日志结构体
+ * @return {*}
+ */
 type AccessLog struct {
 	Method    string
 	Status    int32
@@ -42,5 +46,5 @@ func (l *AccessLog) Format() string {
 		logStrArr = append(logStrArr, fmt.Sprintf("%v", v.Field(i)))
 	}
 
-	return strings.Join(logStrArr, Separator)
+	return strings.Join(logStrArr, separator)
 }

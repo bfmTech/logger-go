@@ -1,16 +1,15 @@
 package logger
 
 import (
-	"github.com/bfmTech/logger-go"
-	"github.com/bfmTech/logger-go/common"
+	winner_logger "github.com/bfmTech/logger-go"
 )
 
 /**
  * @description: logger初始化
  * @return {*}
  */
-func InitLogger() (logger.Logger, error) {
-	log, err := logger.NewLogger("logger-go-test", common.Console) // common.Console、common.File、common.Http
+func InitLogger() (winner_logger.Logger, error) {
+	log, err := winner_logger.NewLogger("logger-go-test", winner_logger.Console) // common.Console、common.File、common.Http
 	if err != nil {
 		return nil, err
 	}

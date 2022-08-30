@@ -4,7 +4,7 @@ import (
 	"errors"
 	"log"
 
-	"github.com/bfmTech/logger-go/common"
+	winner_logger "github.com/bfmTech/logger-go"
 	"github.com/bfmTech/logger-go/examples/logger"
 )
 
@@ -19,7 +19,7 @@ func main() {
 
 	logger.Error(errors.New("出错啦"))
 
-	logger.Access(&common.AccessLog{
+	logger.Access(&winner_logger.AccessLog{
 		Method:    "get",
 		Status:    200,
 		BeginTime: 1657092964,

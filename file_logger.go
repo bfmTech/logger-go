@@ -1,4 +1,4 @@
-package file
+package winner_logger
 
 import (
 	"bufio"
@@ -6,11 +6,9 @@ import (
 	"os"
 	"time"
 	"unsafe"
-
-	"github.com/bfmTech/logger-go/common"
 )
 
-type FileLogger struct {
+type fileLogger struct {
 	AppName         string
 	maxBufferLength int64            // 最大缓存日志条数
 	maxBufferSize   int64            // 最大缓存字符串大小
@@ -21,7 +19,7 @@ type FileLogger struct {
 	filePath        string // 文件保存路径
 }
 
-func (l *FileLogger) Initialize() error {
+func (l *fileLogger) initialize() error {
 	hostName, err := os.Hostname()
 	if err != nil {
 		return err
@@ -53,7 +51,7 @@ func (l *FileLogger) Initialize() error {
 	return nil
 }
 
-func (l *FileLogger) createInterval() {
+func (l *fileLogger) createInterval() {
 	for {
 		select {
 		case <-l.t.C:
@@ -68,7 +66,7 @@ func (l *FileLogger) createInterval() {
 	}
 }
 
-func (l *FileLogger) flush() error {
+func (l *fileLogger) flush() error {
 	if len(l.bufferLog) > 0 {
 		tempBufferLog := l.bufferLog
 		l.bufferLog = l.bufferLog[:0]
@@ -114,36 +112,36 @@ func writeFile(filePath string, tempBufferLog *[]unsafe.Pointer) error {
 	return err
 }
 
-func (l *FileLogger) Debug(message ...string) {
-	l.log(common.Debug, message)
+func (l *fileLogger) Debug(message ...string) {
+	l.log(debugLog, message)
 }
 
-func (l *FileLogger) Info(message ...string) {
-	l.log(common.Info, message)
+func (l *fileLogger) Info(message ...string) {
+	l.log(infoLog, message)
 }
 
-func (l *FileLogger) Warn(message ...string) {
-	l.log(common.Warn, message)
+func (l *fileLogger) Warn(message ...string) {
+	l.log(warnLog, message)
 }
 
-func (l *FileLogger) Error(message error) {
-	l.log(common.Error, []string{message.Error()})
+func (l *fileLogger) Error(message error) {
+	l.log(errorLog, []string{message.Error()})
 }
 
-func (l *FileLogger) Access(accessLog *common.AccessLog) {
-	l.log(common.Access, []string{accessLog.Format()})
+func (l *fileLogger) Access(access *AccessLog) {
+	l.log(accessLog, []string{access.Format()})
 }
 
-func (l *FileLogger) Close() {
+func (l *fileLogger) Close() {
 	l.flush()
 }
 
-func (l *FileLogger) log(level common.Level, messages []string) {
+func (l *fileLogger) log(level logLevel, messages []string) {
 	if len(messages) == 0 {
 		return
 	}
 
-	logStr := common.GetApplicationLogStr(level, l.AppName, messages, 4)
+	logStr := getApplicationLogStr(level, l.AppName, messages, 4)
 
 	l.bufferChan <- logStr
 }

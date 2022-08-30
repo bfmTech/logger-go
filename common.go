@@ -1,4 +1,4 @@
-package common
+package winner_logger
 
 import (
 	"runtime"
@@ -8,8 +8,8 @@ import (
 	"time"
 )
 
-func GetStack(level Level, skip int) string {
-	if level == Error {
+func getStack(level logLevel, skip int) string {
+	if level == errorLog {
 		stack := debug.Stack()
 		return string(stack)
 	} else {
@@ -18,15 +18,15 @@ func GetStack(level Level, skip int) string {
 	}
 }
 
-func GetApplicationLogStr(level Level, appName string, messages []string, skipStack int) string {
-	message := strings.Join(messages, Separator)
+func getApplicationLogStr(level logLevel, appName string, messages []string, skipStack int) string {
+	message := strings.Join(messages, separator)
 
 	now := time.Now().Format("2006-01-02 15:04:05.000")
 	logInfo := &applicationLog{
 		AppName: appName,
 		Level:   string(level),
 		LogTime: now,
-		Stack:   GetStack(level, skipStack),
+		Stack:   getStack(level, skipStack),
 		Message: message,
 	}
 

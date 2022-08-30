@@ -1,4 +1,4 @@
-package http
+package winner_logger
 
 import (
 	"errors"
@@ -6,12 +6,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/bfmTech/logger-go/common"
-
 	"github.com/aliyun/aliyun-log-go-sdk/producer"
 )
 
-type HttpLogger struct {
+type httpLogger struct {
 	AppName          string
 	endpoint         string
 	projectName      string
@@ -21,7 +19,7 @@ type HttpLogger struct {
 	producerInstance *producer.Producer
 }
 
-func (l *HttpLogger) Initialize() error {
+func (l *httpLogger) initialize() error {
 	// 加载阿里云日志服务器相关配置的环境变量
 	endpoint := os.Getenv("LOGGER_ALIYUN_ENDPOINT")
 	if endpoint == "" {
@@ -62,43 +60,43 @@ func (l *HttpLogger) Initialize() error {
 	return nil
 }
 
-func (l *HttpLogger) Debug(message ...string) {
-	l.log(common.Debug, message)
+func (l *httpLogger) Debug(message ...string) {
+	l.log(debugLog, message)
 }
 
-func (l *HttpLogger) Info(message ...string) {
-	l.log(common.Info, message)
+func (l *httpLogger) Info(message ...string) {
+	l.log(infoLog, message)
 }
 
-func (l *HttpLogger) Warn(message ...string) {
-	l.log(common.Warn, message)
+func (l *httpLogger) Warn(message ...string) {
+	l.log(warnLog, message)
 }
 
-func (l *HttpLogger) Error(message error) {
-	l.log(common.Error, []string{message.Error()})
+func (l *httpLogger) Error(message error) {
+	l.log(errorLog, []string{message.Error()})
 }
 
-func (l *HttpLogger) Access(accessLog *common.AccessLog) {
-	l.log(common.Access, []string{accessLog.Format()})
+func (l *httpLogger) Access(access *AccessLog) {
+	l.log(accessLog, []string{access.Format()})
 }
 
-func (l *HttpLogger) Close() {
+func (l *httpLogger) Close() {
 	l.producerInstance.SafeClose()
 }
 
-func (l *HttpLogger) log(level common.Level, messages []string) {
+func (l *httpLogger) log(level logLevel, messages []string) {
 	if len(messages) == 0 {
 		return
 	}
 
-	logStr := common.GetApplicationLogStr(level, l.AppName, messages, 4)
+	logStr := getApplicationLogStr(level, l.AppName, messages, 4)
 
 	log := producer.GenerateLog(uint32(time.Now().Unix()), map[string]string{"content": logStr})
 
 	// 失败重试3次
 	retryNum := 2
 	for {
-		err := l.producerInstance.SendLogWithCallBack(l.projectName, l.logStoreName, l.AppName, "", log, &Callback{logStr: logStr})
+		err := l.producerInstance.SendLogWithCallBack(l.projectName, l.logStoreName, l.AppName, "", log, &callback{logStr: logStr})
 		if err == nil {
 			break
 		}
@@ -117,14 +115,14 @@ func (l *HttpLogger) log(level common.Level, messages []string) {
 /**
  * 发送日志的回调
  */
-type Callback struct {
+type callback struct {
 	logStr string
 }
 
-func (callback *Callback) Success(result *producer.Result) {
+func (callback *callback) Success(result *producer.Result) {
 }
 
-func (callback *Callback) Fail(result *producer.Result) {
+func (callback *callback) Fail(result *producer.Result) {
 	if !result.IsSuccessful() {
 		fmt.Println(callback.logStr)
 	}

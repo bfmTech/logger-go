@@ -1,16 +1,14 @@
-package logger
+package winner_logger
 
 import (
 	"errors"
 	"fmt"
 	"testing"
 	"time"
-
-	"github.com/bfmTech/logger-go/common"
 )
 
 func TestOne(t *testing.T) {
-	log, err := NewLogger("go_app", common.Console) // common.Console、common.File、common.Http
+	log, err := NewLogger("go_app", Console) // common.Console、common.File、common.Http
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -20,7 +18,7 @@ func TestOne(t *testing.T) {
 	log.Info("这是info消息1", "这是info消息2")
 	log.Debug("这是debug消息")
 	log.Error(errors.New("这是error消息"))
-	log.Access(&common.AccessLog{
+	log.Access(&AccessLog{
 		Method:    "get",
 		Status:    200,
 		BeginTime: 1657092964,

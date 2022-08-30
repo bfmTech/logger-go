@@ -1,19 +1,45 @@
-package logger
+package winner_logger
 
-import (
-	"github.com/bfmTech/logger-go/common"
-	"github.com/bfmTech/logger-go/console"
-	"github.com/bfmTech/logger-go/file"
-	"github.com/bfmTech/logger-go/http"
-)
-
+/**
+ * @description: 日志
+ * @return {*}
+ */
 type Logger interface {
-	Initialize() error
+	initialize() error
+	/**
+	* @description: 记录debug日志
+	* @param {...string} message 日志内容
+	* @return {*}
+	 */
 	Debug(message ...string)
+	/**
+	* @description: 记录info日志
+	* @param {...string} message 日志内容
+	* @return {*}
+	 */
 	Info(message ...string)
+	/**
+	* @description: 记录warn日志
+	* @param {...string} message 日志内容
+	* @return {*}
+	 */
 	Warn(message ...string)
+	/**
+	* @description: 记录error日志
+	* @param {error} message error对象
+	* @return {*}
+	 */
 	Error(message error)
-	Access(accessLog *common.AccessLog)
+	/**
+	* @description: 记录access日志
+	* @param {*AccessLog} accessLog accessLog对象
+	* @return {*}
+	 */
+	Access(accessLog *AccessLog)
+	/**
+	* @description: 上传当前缓存日志，释放资源
+	* @return {*}
+	 */
 	Close()
 }
 
@@ -23,21 +49,21 @@ type Logger interface {
  * @param {common.LoggerMethod} method 日志记录方式 console、file、http
  * @return {*}
  */
-func NewLogger(appName string, method common.LoggerMethod) (Logger, error) {
+func NewLogger(appName string, method loggerMethod) (Logger, error) {
 	var log Logger
 
 	switch method {
-	case common.Console:
-		log = &console.ConsoleLogger{AppName: appName}
-	case common.File:
-		log = &file.FileLogger{AppName: appName}
-	case common.Http:
-		log = &http.HttpLogger{AppName: appName}
+	case Console:
+		log = &consoleLogger{AppName: appName}
+	case File:
+		log = &fileLogger{AppName: appName}
+	case Http:
+		log = &httpLogger{AppName: appName}
 	default:
-		log = &console.ConsoleLogger{AppName: appName}
+		log = &consoleLogger{AppName: appName}
 	}
 
-	err := log.Initialize()
+	err := log.initialize()
 
 	return log, err
 }
