@@ -130,7 +130,7 @@ func main() {
 **关于链路追踪的实现**  
 1、获取请求header中的X-Request-ID (Nginx access日志中的req_id) 标记为req_id  
 2、所有应用日志记录上req_id  
-3、应用上下游调用时，透传 X-Request-ID
+3、应用上下游调用时，透传 X-Request-ID  
 4、可在监控系统中通过req_id在访问日志和应用日志查询到完成的请求链路
 
 ## 注意
