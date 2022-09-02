@@ -3,23 +3,21 @@ package main
 import (
 	"errors"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	winner_logger "github.com/bfmTech/logger-go"
 	"github.com/bfmTech/logger-go/examples/logger"
 )
 
 func main() {
-	logger, err := logger.InitLogger()
-	if err != nil {
-		log.Fatal("logger初始化失败：" + err.Error())
-	}
-	defer logger.Close()
+	logger.GetLogger().Info("这是info消息1", "消息2", "消息3")
 
-	logger.Info("这是info消息1", "消息2", "消息3")
+	logger.GetLogger().Error(errors.New("出错啦"))
 
-	logger.Error(errors.New("出错啦"))
-
-	logger.Access(&winner_logger.AccessLog{
+	logger.GetLogger().Access(&winner_logger.AccessLog{
 		Method:    "get",
 		Status:    200,
 		BeginTime: 1657092964,
@@ -35,5 +33,18 @@ func main() {
 		ReqId:     "j4k34423kl3k4f5lk234js9",
 		Headers:   "token:439skf2dk234",
 	})
+
+	// 等待中断信号，注意是 os.Signal
+	quit := make(chan os.Signal)
+	signal.Notify(quit, os.Interrupt, os.Kill, syscall.SIGQUIT, syscall.SIGINT, syscall.SIGTERM)
+	receive := <-quit
+	log.Println("Shutting down server...", receive)
+
+	defer logger.GetLogger().Close()
+
+	// 3秒后程序退出
+	time.Sleep(time.Second * 3)
+
+	log.Println("Server exiting")
 
 }

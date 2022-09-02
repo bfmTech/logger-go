@@ -26,6 +26,9 @@ func (l *fileLogger) initialize() error {
 	}
 
 	filePath := "/var/winnerlogs"
+	if nodeAppData := os.Getenv("NODE_APP_DATA"); nodeAppData != "" {
+		filePath = nodeAppData
+	}
 
 	/*
 	 * 日志写入文件条件：
