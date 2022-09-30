@@ -36,6 +36,9 @@ func (l *consoleLogger) Access(access *AccessLog) {
 func (l *consoleLogger) Close() {
 }
 
+func (l *consoleLogger) SetStoringDays(days int) {
+}
+
 func (l *consoleLogger) log(level logLevel, messages []string) {
 	if len(messages) == 0 {
 		return

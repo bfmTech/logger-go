@@ -146,9 +146,13 @@ func main() {
 | LOGGER_ALIYUN_ACCESSKEYID  | AccessKey ID，建议使用RAM用户的AccessKey信息。 |
 | LOGGER_ALIYUN_ACCESSKEYSECRET  | AccessKey Secret，建议使用RAM用户的AccessKey信息。 |
 
+**非k8s容器平台`File`类型的日志使用说明**
+* 日志文件存储在`NODE_APP_DATA`环境变量目录下
+* 存储目录为：指定目录/应用名称/主机名/logger-YYYY-MM-DD.log
+* 设置文件存储天数 logger.SetStoringDays(30)
+
 ## 注意
 1、 `appName` 需唯一，且有意义，用于检索和报错时通知负责人。  
 2、日志上传方式为`File`或`Http`时，程序退出时必须调用Close()，否则可能导致最后部分日志丢失。  
 3、日志上传方式为`Http`时，需要配置阿里云相关环境变量，请联系管理员。  
 4、日志默认存储时长为**360**天，如有特殊需求请联系管理员。  
-5、日志上传方式为`File`时，可配置环境变量`NODE_APP_DATA`，设置文件存储目录。

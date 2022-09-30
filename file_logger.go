@@ -17,6 +17,7 @@ type fileLogger struct {
 	bufferChan      chan string
 	t               *time.Ticker
 	filePath        string // 文件保存路径
+	storingDays     int    // 文件存储天数
 }
 
 func (l *fileLogger) initialize() error {
@@ -137,6 +138,25 @@ func (l *fileLogger) Access(access *AccessLog) {
 
 func (l *fileLogger) Close() {
 	l.flush()
+}
+
+func (l *fileLogger) SetStoringDays(days int) {
+	nodeAppData := os.Getenv("NODE_APP_DATA")
+	if days > 0 && nodeAppData != "" {
+		l.storingDays = days
+
+		go l.clearExpiredFiles()
+	}
+}
+
+func (l *fileLogger) clearExpiredFiles() {
+	t := time.NewTicker(time.Hour * 24)
+	for {
+		select {
+		case <-t.C:
+			os.Remove(fmt.Sprintf("%s/logger-%s.log", l.filePath, time.Now().AddDate(0, 0, (l.storingDays+1)*-1).Format("2006-01-02")))
+		}
+	}
 }
 
 func (l *fileLogger) log(level logLevel, messages []string) {

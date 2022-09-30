@@ -84,6 +84,9 @@ func (l *httpLogger) Close() {
 	l.producerInstance.SafeClose()
 }
 
+func (l *httpLogger) SetStoringDays(days int) {
+}
+
 func (l *httpLogger) log(level logLevel, messages []string) {
 	if len(messages) == 0 {
 		return

@@ -41,6 +41,11 @@ type Logger interface {
 	* @return {*}
 	 */
 	Close()
+	/**
+	* @description: 设置文件日志存储天数
+	* @return {*}
+	 */
+	SetStoringDays(days int)
 }
 
 /**

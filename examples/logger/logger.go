@@ -19,6 +19,7 @@ func initLogger() winner_logger.Logger {
 	var err error
 	once.Do(func() {
 		logger, err = winner_logger.NewLogger("应用名称", winner_logger.Console) // winner_logger.Console、winner_logger.File、winner_logger.Http
+		// logger.SetStoringDays(30) // 设置文件存储天数（非容器环境、File日志类型）
 	})
 
 	if err != nil {
