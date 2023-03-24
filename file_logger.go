@@ -33,7 +33,7 @@ func (l *fileLogger) initialize() error {
 
 	/*
 	 * 日志写入文件条件：
-	 * 每隔3秒
+	 * 每隔1秒
 	 * 文件字符长度大于等于1 * 1024 * 1024
 	 * 日志条数大于等于100
 	 */
@@ -42,7 +42,7 @@ func (l *fileLogger) initialize() error {
 	l.bufferLog = make([]unsafe.Pointer, 0, 200)
 	l.bufferSize = 0
 	l.bufferChan = make(chan string, 10000)
-	l.t = time.NewTicker(time.Millisecond * 3000)
+	l.t = time.NewTicker(time.Millisecond * 1000)
 	l.filePath = fmt.Sprintf("%s/%s/%s/", filePath, l.AppName, hostName)
 
 	err = os.MkdirAll(l.filePath, os.ModePerm)

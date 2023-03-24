@@ -54,6 +54,7 @@ func (l *httpLogger) initialize() error {
 	producerConfig.AccessKeyID = l.accessKeyId
 	producerConfig.AccessKeySecret = l.accessKeySecret
 	producerConfig.AllowLogLevel = "error"
+	producerConfig.LingerMs = 1000
 	l.producerInstance = producer.InitProducer(producerConfig)
 	l.producerInstance.Start()
 
