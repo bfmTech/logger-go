@@ -9,13 +9,17 @@ import (
 )
 
 func getStack(level logLevel, skip int) string {
+	var strStack string
 	if level == errorLog {
 		stack := debug.Stack()
-		return string(stack)
+		strStack = string(stack)
 	} else {
 		_, file, line, _ := runtime.Caller(skip)
-		return file + ":" + strconv.Itoa(line)
+		strStack = file + ":" + strconv.Itoa(line)
 	}
+
+	strStack = strings.ReplaceAll(strings.ReplaceAll(strStack, "[", ""), "]", "")
+	return strStack
 }
 
 func getApplicationLogStr(level logLevel, appName string, messages []string, skipStack int) string {
