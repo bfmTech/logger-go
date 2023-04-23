@@ -128,6 +128,7 @@ func (callback *callback) Success(result *producer.Result) {
 
 func (callback *callback) Fail(result *producer.Result) {
 	if !result.IsSuccessful() {
+		fmt.Fprintln(os.Stderr, result.GetErrorMessage())
 		fmt.Println(callback.logStr)
 	}
 }
